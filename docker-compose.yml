@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: schoolmanagement_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: SchoolManagement
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - schoolmanagement_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ASP.NET Core API
+  api:
+    image: schoolmanagement_api:latest
+    container_name: schoolmanagement_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:80;https://+:443
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=SchoolManagement;Username=postgres;Password=postgres"
+      Jwt__Secret: "super-secret-key-min-32-characters-required-for-HS256"
+      Jwt__Issuer: "SchoolManagementAPI"
+      Jwt__Audience: "SchoolManagementApp"
+      Jwt__ExpiryHours: "24"
+    ports:
+      - "5000:80"
+      - "5001:443"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - schoolmanagement_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/api/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+
+  # pgAdmin (Optional - for database management)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: schoolmanagement_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - schoolmanagement_network
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+networks:
+  schoolmanagement_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  pgadmin_data:

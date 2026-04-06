@@ -1,0 +1,86 @@
+# Git ignore file for ASP.NET Core
+# Byte-compiled / optimized / DLL files
+bin/
+obj/
+out/
+
+# Visual Studio / Visual Studio Code
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.VC.db
+*.opendb
+
+# User-specific files
+.idea/
+*.swp
+*.swo
+*~
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+
+# Entity Framework Core migrations (optional - uncomment if preferred)
+# Migrations/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Environment files
+.env
+.env.local
+.env.*.local
+secrets.json
+
+# Application settings (development only)
+appsettings.Development.json
+
+# Test Results
+TestResults/
+*.trx
+
+# Coverage
+coverage/
+*.coverage
+
+# Package files
+dist/
+build/
+
+# IDE specific files
+.DS_Store
+.AppleDouble
+.LSOverride
+*.iml
+.gradle/
+.m2/
+
+# Rider
+.idea/
+*.sln.iml
+riderModule.iml
